@@ -1,0 +1,7 @@
+node_modules
+dist
+.env
+*.log
+*.zip
+*.claude
+/garment-erp-migrations-seeders
