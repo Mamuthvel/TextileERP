@@ -5,11 +5,13 @@ import { asyncHandler } from '../utils/asyncHandler';
 const COOKIE_NAME = 'loomline_token';
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const setTokenCookie = (res: Response, token: string): void => {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'strict',
     maxAge: COOKIE_MAX_AGE,
   });
 };
@@ -27,7 +29,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const logout = (_req: Request, res: Response): void => {
-  res.clearCookie(COOKIE_NAME, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+  res.clearCookie(COOKIE_NAME, { httpOnly: true, secure: isProduction, sameSite: isProduction ? 'none' : 'strict' });
   res.json({ success: true, data: null, message: 'Logged out' });
 };
 
